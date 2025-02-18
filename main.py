@@ -1,3 +1,6 @@
+from pathlib import Path
+import json
+
 PRODUTOS = [
     {'id':0, 'produto':'Poco x7 pro', 'preco':3_000},
     {'id':1,'produto':'Iphone 14', 'preco':4_000},
@@ -5,10 +8,16 @@ PRODUTOS = [
     {'id':3,'produto':'Poco x6 pro', 'preco':1_900},
 ]
 
+ROOT_DIR = Path(__file__).parent
+FILE_JSON = 'user.json'
+FILE = ROOT_DIR / FILE_JSON
+
 class Ecommerce:
     def __init__(self, produtos):
         self.produtos = produtos
         self.carrinho_item = 0
+        self.app_json()
+        
 
     def listar_produtos(self):
         for produto in self.produtos:
@@ -19,6 +28,17 @@ class Ecommerce:
             if produto['preco'] >= min and produto['preco'] <= max:
                 print(f'{produto['id']}) Item: {produto['produto']} Preço: {produto['preco']}')
 
+    def app_json(self):
+        self.values = [
+                {
+                   'valor':self.carrinho_item
+            }   
+        ]
+        with open(FILE, 'w', encoding='utf-8') as arquivo:
+            json.dump(self.values, arquivo, ensure_ascii=False, indent=2)
+
+    def cadastrar(self):
+        
 
 def opcoes():
     print('1) Listar produtos')
@@ -27,18 +47,7 @@ def opcoes():
     response = int(input('O que você deseja: '))
     return response
 
-c = 0
-while c < 3:
-    response = opcoes
-    ecommerce = Ecommerce(PRODUTOS)
-    if response == 1:
-        ecommerce.listar_produtos()
-
-    elif response == 2:
-        min = float(input('Digite o valor minimo: '))
-        max = float(input('Digite o valor maximo: '))
-        ecommerce.filtrar_valores(min, max)
-
+ecommerce = Ecommerce(PRODUTOS)
     
 # min = float(input('Digite o valor minimo: '))
 # max = float(input('Digite o valor maximo: '))
